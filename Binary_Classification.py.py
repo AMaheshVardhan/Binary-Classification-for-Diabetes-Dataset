@@ -4,10 +4,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 # %matplotlib inline
 sns.set_style('whitegrid')
-
 import warnings
 warnings.filterwarnings('ignore')
-
 from google.colab import files
 uploaded = files.upload()
 
