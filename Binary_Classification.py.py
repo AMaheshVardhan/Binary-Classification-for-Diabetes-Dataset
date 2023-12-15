@@ -9,10 +9,6 @@ sns.set_style('whitegrid')
 import warnings
 warnings.filterwarnings('ignore')
 
-"""## Importing the dataset"""
-
-# Upload the preprocessed diabetes data CSV file that has been shared with you.
-# Run this cell, click on the 'Choose files' button and upload the file.
 from google.colab import files
 uploaded = files.upload()
 
@@ -21,30 +17,8 @@ diabetes_data = pd.read_csv('preprocessed_diabetes_data.csv')
 # View top 10 rows of the Diabetes dataset
 diabetes_data.head(10)
 
-"""## Identification of variables and data types"""
-
 diabetes_data.shape
-
-"""Dataset comprises of 768 observations and 9 fields.
-
-The following features have been provided to help us predict whether a person is diabetic or not:
-
-* **Pregnancies:** Number of times pregnant
-* **Glucose:** Plasma glucose concentration over 2 hours in an oral glucose tolerance test. Less than 140 mg/dL is considered normal level of glucose.
-* **BloodPressure:** Diastolic blood pressure (mm Hg). 120/80 is normal BP level for females above 18 years old.
-* **SkinThickness:** Triceps skin fold thickness (mm)
-* **Insulin:** 2-Hour serum insulin (mu U/ml). 16-166 mIU/L is considered the normal level of insulin.
-* **BMI:** Body mass index (weight in kg/((height in m$)^2$))
-* **DiabetesPedigreeFunction:** Diabetes pedigree function (a function which scores likelihood of diabetes based on family history)
-* **Age:** Age (in years)
-* **Outcome:** Class variable (0 if non-diabetic, 1 if diabetic)
-
-"""
-
-# Get the details of each column
 diabetes_data.describe().T
-
-"""Let us see distribution and also boxplot for outliers of feature "Pregnancies"."""
 
 fig,axes = plt.subplots(nrows=1,ncols=2,figsize = (8,6))
 
@@ -58,83 +32,22 @@ plt.tight_layout()
 plot01=sns.boxplot(data=diabetes_data['Pregnancies'], ax=axes[1],orient = 'v', color='r')
 plt.tight_layout()
 
-## TASK-1 :
-## Find out the "Correlation" between the different attributes present in the data.
-## Also plot a heatmap (refer Seaborn documentation) for the correlation values obtained.
-
 diabetes_data.corr()
-
-"""<p style="font-weight: bold;color:#FF4500"><b>Observations</b></p>  
-
-* From the correlation map you just obtained above, it seems that Insulin is highly correlated with Glucose, BMI and Age. It means that as the values of glucose, BMI and Age increase, the insulin is also increasing. It seems logical also that overweight and elderly people might have a higher level of insulin in their bodies.  
-
-* In the same way SkinThickness is highly correlated with BMI.
-
-## Checking  if the data is balanced or imbalanced
-
-We can produce a seaborn count plot to check if the output is dominated by one of the classes or not.
-"""
 
 plt.figure(figsize=(12,6))
 sns.countplot(x='Outcome',data=diabetes_data, palette='bright')
 plt.title("Output class distribution")
 
 print(diabetes_data['Outcome'].value_counts())
-
-"""<p style="font-weight: bold;color:#FF4500"><b>Observations</b></p>  
-
-A total of 768 women were registered in the database. 268 women had diabetes, while 500 women did not have diabetes.
-
-The above graph shows that the dataset is biased towards non-diabetic people. The number of non-diabetic people is almost twice the number of diabetic patients.
-
-## Scatter matrix of data
-
-A pair-plot builds on two basic figures, the histogram and the scatter plot. The histogram on the diagonal allows us to see the distribution of a single variable while the scatter plots on the upper and lower triangles show the relationship (or lack thereof) between two variables.
-"""
-
-## TASK-2: Display a pairplot using Seaborn for the diabetes dataset, with the 'outcome' as the hue.
-
 sns.pairplot(diabetes_data, hue="Outcome")
-
-"""## BMI vs Outcome"""
 
 plt.figure(figsize=(12,8))
 sns.boxplot(x='Outcome', y='BMI',data=diabetes_data, hue='Outcome')
 
-"""<p style="font-weight: bold;color:#FF4500"><b>Observations</b></p>
-
-It is surprising that the median BMI does not significanty change as the number of pregnancies increases. Those who tested positive for diabetes had higher BMIs than those who did not. However,there is not a very large difference between the medians.
-
-BMI might be higher for women who have had more numbers of pregnancies as well as for those who test positive for diabetes and that the relationship between the pedigree function and the test results will show that those who had a higher pedigree function tested positive and those who had a lower pedigree function tested negative.
-
-## Pedigree function vs Diabetes
-"""
-
-## TASK-3: Display a boxplot between the Pedigree function and Diabetes.
-
 plt.figure(figsize=(12,8))
 sns.boxplot(x='Outcome', y='DiabetesPedigreeFunction',data=diabetes_data, hue="Outcome")
-
-"""<p style="font-weight: bold;color:#FF4500"><b>Observations</b></p>
-This graph more clearly shows the relationship between the pedigree function and the test results that the women got for diabetes. Since those who tested positive have a higher median and more high outliers, it is clear that the pedigree function does in fact, accurately help estimate the test results for diabetes. It shows that diabetes does follow genetics so those whose ancestors suffered from it have a higher risk of getting the disease themselves as well. Both test results show many outliers yet the outliers for those who tested negative seem to have lower pedigree functions than those who tested positive. This indicates that the genetic component is likely to contribute more to the emergence of diabetes in the Pima Indians and their offspring.
-
-## Pregnancy vs Diabetes
-"""
-
-## TASK-4: Display a boxplot between the number of Pregnancies and Diabetes.
-
 plt.figure(figsize=(12,8))
 sns.boxplot(x='Outcome', y='Pregnancies',data=diabetes_data, hue="Outcome")
-
-"""<p style="font-weight: bold;color:#FF4500"><b>Observations</b></p>
-
-The average number of pregnancies is higher in diabetic as compared to non-diabetic women.
-
-## Prevalence of Diabetes vs BMI
-
-Let's try to find out the prevalence of diabetes and its relation to their BMI. Please note that the range of normal BMI is 18.5 to 25.
-"""
-
 normalBMIData = diabetes_data[(diabetes_data['BMI'] >= 18.5) & (diabetes_data['BMI'] <= 25)]
 normalBMIData['Outcome'].value_counts()
 
@@ -143,27 +56,8 @@ notNormalBMIData['Outcome'].value_counts()
 
 plt.figure(figsize=(12,8))
 sns.boxplot(x='Outcome', y='BMI',data=notNormalBMIData)
-
-"""<p style="font-weight: bold;color:#FF4500"><b>Observations</b></p>
-
-The Body Mass Index (BMI) shows a significant association with the occurrence of diabetes.  
-The interquartile range for the women who tested positive reaches a higher BMI than the IQR for those who tested negative. Therefore, women could have higher BMIs and not be outliers if they tested positive as opposed to negative, showing that more women who tested positive did, in fact, have higher BMIs than those who tested negative.
-
-## Age vs Diabetes
-"""
-
-## TASK-5: Display a boxplot between Age and Diabetes.
-
 plt.figure(figsize=(12,8))
 sns.boxplot(x='Outcome', y='Age',data=diabetes_data, hue="Outcome")
-
-"""<p style="font-weight: bold;color:#FF4500"><b>Observations</b></p>  
-
-A significant relation can be seen between the age distribution and occurrence of diabetes. Women at age group > 31 years were at higher risk of getting diabetes in comparison to the younger age group.
-
-# The Importance of Standardizing Data
-"""
-
 unchanged_data = diabetes_data.drop('Outcome',axis=1)
 
 unchanged_data
@@ -173,27 +67,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report,confusion_matrix
 from sklearn.neighbors import KNeighborsClassifier
 
-"""# Choosing a K Value
-Let's go ahead and use the elbow method to pick a good K Value!
-
-*Create a for loop that trains various KNN models with different k values, then keep track of the error_rate for each of these models with a list.*
-"""
-
-##########################
-##########################
-
-## TASK-6 : Complete the lines of code wherever marked as [REQUIRED] in this cell.
-
-##########################
-##########################
-
-
 def plot_KNN_error_rate(xdata,ydata):
   error_rate = []
   test_scores = []
   train_scores = []
-
-  ## [REQUIRED] Split the data into train and test sets in a 70:30 ratio (70% train, 30% test)
   X_train, X_test, y_train, y_test = train_test_split(xdata, ydata, test_size=0.3, random_state=42) ## Write your code here (expected lines ~ 1)
 
   for i in range(1,40):
@@ -290,9 +167,6 @@ plt.title('Accuracy vs. K Value')
 sns.lineplot(unchanged_test_scores,marker='o',label='Unscaled data test score')
 sns.lineplot(scaled_test_scores,marker='o',label='Scaled data test Score')
 
-## TASK-7: Refer to MinMax Scaler provided in scikit-learn.
-## Use MinMax scaling on the dataset, and see the performance of KNN on this minmax-scaled dataset.
-
 from sklearn.preprocessing import MinMaxScaler
 minMaxScaler = MinMaxScaler()
 minMaxScaler.fit(diabetes_data.drop('Outcome', axis =1))
@@ -304,8 +178,6 @@ df_feat.head()
 new_test_scores = plot_KNN_error_rate(minMaxedScaledData, diabetes_data['Outcome'])
 
 len(new_test_scores)
-
-## TASK-8: Use K-Fold cross validation on all the above classification experiments and present an analysis of the results you obtain.
 
 from sklearn.model_selection import KFold
 from statistics import mean
@@ -354,14 +226,3 @@ def plot_KNN_error_rate_new(xdata,ydata):
   return cv_test
 
 unchanged_test_scores = plot_KNN_error_rate_new(unchanged_data,diabetes_data['Outcome'])
-
-"""# Conclusion
-
-From the data analysis we carried out, it seems that there is some form of an association between BMI, number of pregnancies, pedigree function, and the test results for diabetes.
-
-As for the classification tasks, the standardized data yields much better results than the unscaled data over most of the K-values considered, thus indicating the importance of standardizing data in Machine Learning problems.
-
-# References
-
-https://www.kaggle.com/dktalaicha/diabetes-prediction-by-knn
-"""
