@@ -11,7 +11,6 @@ uploaded = files.upload()
 
 diabetes_data = pd.read_csv('preprocessed_diabetes_data.csv')
 
-# View top 10 rows of the Diabetes dataset
 diabetes_data.head(10)
 
 diabetes_data.shape
